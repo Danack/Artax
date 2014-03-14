@@ -1,20 +1,19 @@
 <?php
 
-namespace Artax;
+namespace Artax\Entity;
 
 class MultipartFormBodyIterator implements \Iterator, \Countable {
-    
     private $fields;
     private $length;
     private $currentCache;
     private $position = 0;
-    
-    function __construct(array $fields, $length) {
+
+    public function __construct(array $fields, $length) {
         $this->fields = $fields;
         $this->length = $length;
     }
-    
-    function current() {
+
+    public function current() {
         if (isset($this->currentCache)) {
             $current = $this->currentCache;
         } elseif (current($this->fields) instanceof FileBody) {
@@ -22,15 +21,15 @@ class MultipartFormBodyIterator implements \Iterator, \Countable {
         } else {
             $current = $this->currentCache = current($this->fields);
         }
-        
+
         return $current;
     }
-    
-    function key() {
+
+    public function key() {
         return key($this->fields);
     }
 
-    function next() {
+    public function next() {
         $this->currentCache = NULL;
         if (current($this->fields) instanceof FormBody) {
             current($this->fields)->next();
@@ -39,23 +38,23 @@ class MultipartFormBodyIterator implements \Iterator, \Countable {
         }
     }
 
-    function valid() {
+    public function valid() {
         return isset($this->fields[key($this->fields)]);
     }
 
-    function rewind() {
+    public function rewind() {
         foreach ($this->fields as $field) {
             if ($field instanceof MultipartFormFile) {
                 $field->rewind();
             }
         }
-        
+
         reset($this->fields);
-        
+
         $this->currentCache = NULL;
     }
-    
-    function count() {
+
+    public function count() {
         return $this->length;
     }
 }

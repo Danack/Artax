@@ -3,10 +3,9 @@
 namespace Artax;
 
 trait ObservableSubject {
-
     private $observations;
 
-    function addObservation(array $eventListenerMap) {
+    public function addObservation(array $eventListenerMap) {
         $this->observations = $this->observations ?: new \SplObjectStorage;
         $observation = new Observation($this, $eventListenerMap);
         $this->observations->attach($observation);
@@ -14,13 +13,13 @@ trait ObservableSubject {
         return $observation;
     }
 
-    function removeObservation(Observation $observation) {
+    public function removeObservation(Observation $observation) {
         if ($this->observations) {
             $this->observations->detach($observation);
         }
     }
 
-    function removeAllObservations() {
+    public function removeAllObservations() {
         $this->observations = new \SplObjectStorage;
     }
 
@@ -31,5 +30,4 @@ trait ObservableSubject {
             call_user_func($observation, $event, $data);
         }
     }
-
 }

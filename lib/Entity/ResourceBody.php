@@ -1,15 +1,14 @@
 <?php
 
-namespace Artax;
+namespace Artax\Entity;
 
 class ResourceBody implements \Iterator, \Countable {
-    
     private $resource;
     private $lengthCache;
     private $currentIterCache;
     private $streamGranularity = 32768;
     
-    function __construct($resource) {
+    public function __construct($resource) {
         if (is_resource($resource)) {
             $this->validateSeekability($resource);
             $this->resource = $resource;
@@ -28,7 +27,7 @@ class ResourceBody implements \Iterator, \Countable {
         }
     }
     
-    function count() {
+    public function count() {
         if (isset($this->lengthCache)) {
             $length = $this->lengthCache;
         } else {
@@ -89,7 +88,7 @@ class ResourceBody implements \Iterator, \Countable {
         return $isEof;
     }
     
-    function current() {
+    public function current() {
         if (isset($this->currentIterCache)) {
             $current = $this->currentIterCache;
         } else {
@@ -111,27 +110,26 @@ class ResourceBody implements \Iterator, \Countable {
         return $chunk;
     }
     
-    function key() {
+    public function key() {
         return $this->getResourcePosition($this->resource);
     }
 
-    function next() {
+    public function next() {
         $this->currentIterCache = NULL;
     }
 
-    function valid() {
+    public function valid() {
         return !$this->isEof($this->resource);
     }
 
-    function rewind() {
+    public function rewind() {
         $this->seekResource($this->resource, 0);
     }
     
-    function setStreamGranularity($bytes) {
+    public function setStreamGranularity($bytes) {
         $this->streamGranularity = filter_var($bytes, FILTER_VALIDATE_INT, ['options' => [
             'min_range' => 1,
             'default' => 32768
         ]]);
     }
 }
-

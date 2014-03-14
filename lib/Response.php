@@ -3,29 +3,26 @@
 namespace Artax;
 
 class Response extends Message {
-    
     private $status;
     private $reason;
-    
-    function getStatus() {
+
+    public function getStatus() {
         return $this->status;
     }
-    
-    function setStatus($status) {
+
+    public function setStatus($status) {
         $this->status = (int) $status;
-        
+
         return $this;
     }
-    
-    function getReason() {
+
+    public function getReason() {
         return $this->reason;
     }
-    
-    function setReason($reason) {
+
+    public function setReason($reason) {
         $this->reason = $reason;
-        
+
         return $this;
     }
-    
 }
-
